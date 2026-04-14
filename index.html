@@ -15,11 +15,32 @@
   --warm:#c8a461;--warm-dim:rgba(200,164,97,.07);--warm-mid:rgba(200,164,97,.15);
   --green:#5cb87a;
 }
+.light{
+  --bg:#f5f5f0;--surface:#eaeae5;--card:#fff;--card-hover:#f8f8f5;
+  --border:#ddd8d0;--border-light:#ccc7be;
+  --t1:#1a1a1a;--t2:#6b6b6b;--t3:#a0a0a0;
+  --warm:#9a7830;--warm-dim:rgba(154,120,48,.07);--warm-mid:rgba(154,120,48,.15);
+  --green:#3a9056;
+}
+.light .ehdr:hover{background:rgba(0,0,0,.02)}
+.light .abtn,.light .ecount{background:rgba(0,0,0,.03)}
+.light .edition.open{box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.light .tweet.highlight{background:rgba(154,120,48,.06)}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--t1);font-family:'Outfit',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 .wrap{max-width:660px;margin:0 auto;padding:0 20px}
 
-.hdr{padding:80px 0 32px;text-align:center}
+.hdr{padding:80px 0 32px;text-align:center;position:relative}
+.theme-toggle{
+  position:absolute;top:28px;right:0;
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;cursor:pointer;
+  color:var(--t2);font-size:16px;
+  transition:all .15s;
+}
+.theme-toggle:hover{color:var(--warm);border-color:var(--warm)}
 .hdr .mark{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:var(--warm-dim);border:1px solid var(--warm-mid);border-radius:12px;font-size:22px;margin-bottom:20px}
 .hdr h1{font-size:22px;font-weight:600;letter-spacing:-0.3px;margin-bottom:6px}
 .hdr p{font-size:14px;color:var(--t2);font-weight:300}
@@ -127,6 +148,7 @@ body{background:var(--bg);color:var(--t1);font-family:'Outfit',system-ui,sans-se
 <body>
 <div class="wrap">
   <div class="hdr">
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle light/dark mode">&#9790;</button>
     <div class="mark">&#x1F48E;</div>
     <h1>5 Tweet Tuesday Archive</h1>
     <p>Every edition of Shaan Puri&#8217;s weekly tweet curation</p>
@@ -185,6 +207,14 @@ function gLS(k,d){try{return JSON.parse(localStorage.getItem('5tt_'+k))||d}catch
 function sLS(k,v){try{localStorage.setItem('5tt_'+k,JSON.stringify(v))}catch(e){}}
 
 let pins=gLS('pins',[]),readE=gLS('read',{}),activeY=null,activeA=null,query='';
+
+// Theme
+function toggleTheme(){
+  const isLight=document.body.classList.toggle('light');
+  sLS('theme',isLight?'light':'dark');
+  document.getElementById('themeBtn').innerHTML=isLight?'&#9728;':'&#9790;';
+}
+(function(){const t=gLS('theme','dark');if(t==='light'){document.body.classList.add('light');document.getElementById('themeBtn').innerHTML='&#9728;'}})()
 
 // Stats
 document.getElementById('sE').textContent=D.length;
