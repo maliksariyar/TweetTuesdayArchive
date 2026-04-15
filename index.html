@@ -326,7 +326,7 @@ function render(){
   feed.innerHTML=items.map(e=>{
     const ir=readE[e.num];
     return '<div class="edition'+(ao?' open':'')+(ir?' read-mark':'')+'" data-n="'+e.num+'" data-eidx="'+e._idx+'">'+
-    '<div class="ehdr" onclick="togE(this)"><span class="edot"></span><span class="enum">#'+e.num+'</span><span class="edate">'+fmt(e.date)+'</span><span class="ecount">'+e.tweets.length+' tweets</span><button class="echeck'+(ir?' is-read':'')+'" data-action="read" data-rn="'+e.num+'" title="Mark as read">&#10003;</button>'+chevSVG+'</div>'+
+    '<div class="ehdr" onclick="togE(this)"><span class="edot"></span><span class="enum">#'+e.num+'</span><span class="edate">'+fmt(e.date)+'</span><button class="echeck'+(ir?' is-read':'')+'" data-action="read" data-rn="'+e.num+'" title="Mark as read">&#10003;</button>'+chevSVG+'</div>'+
     '<div class="ebody">'+
     e.tweets.map((t,i)=>{
       const ip=isPinned(t),hl=activeA&&t.author.toLowerCase()===activeA;
