@@ -119,8 +119,11 @@ body{background:var(--bg);color:var(--t1);font-family:'Outfit',system-ui,sans-se
 .ebody{overflow:hidden;display:none;padding:0 16px}
 .edition.open .ebody{display:block;padding:4px 16px 18px}
 
-.tweet{background:var(--card);border-radius:8px;padding:18px 20px;margin-bottom:6px;text-decoration:none;display:block;color:inherit;transition:background .15s,border-color .2s;border:1px solid transparent;position:relative}
+.tweet{background:var(--card);border-radius:8px;padding:18px 20px;margin-bottom:6px;color:inherit;transition:background .15s,border-color .2s;border:1px solid transparent;position:relative}
 .tweet:hover{background:var(--card-hover);border-color:var(--border)}
+.tweet-top,.tweet-bottom{display:block;text-decoration:none;color:inherit;border-radius:4px;transition:opacity .15s}
+.tweet-top:hover{opacity:.85}
+.tweet-bottom:hover{opacity:.85}
 .tweet.highlight{border-color:var(--warm);background:rgba(200,164,97,.04)}
 .tweet.highlight .tauthor{color:var(--warm)}
 .ttext{font-size:14.5px;color:var(--t1);line-height:1.65;font-weight:300}
@@ -326,11 +329,22 @@ function render(){
     '<div class="ehdr" onclick="togE(this)"><span class="edot"></span><span class="enum">#'+e.num+'</span><span class="edate">'+fmt(e.date)+'</span><span class="ecount">'+e.tweets.length+' tweets</span><button class="echeck'+(ir?' is-read':'')+'" data-action="read" data-rn="'+e.num+'" title="Mark as read">&#10003;</button>'+chevSVG+'</div>'+
     '<div class="ebody">'+
     e.tweets.map((t,i)=>{
-      const tag=t.url?'a':'div',hr=t.url?' href="'+t.url+'" target="_blank" rel="noopener"':'',
-        ip=isPinned(t),hl=activeA&&t.author.toLowerCase()===activeA;
-      return '<'+tag+' class="tweet'+(hl?' highlight':'')+'"'+hr+' data-tidx="'+i+'">'+
-        (t.text?'<div class="ttext">'+t.text+'</div><div class="tmeta"><span class="tauthor">@'+t.author+'</span><div class="tweet-actions"><button class="tact'+(ip?' pinned-state':'')+'" data-action="pin" title="Pin">&#9733;</button></div></div>'+(t.commentary?'<div class="tsep"></div><div class="tcomm-tag">shaan:</div><div class="tcomm">'+t.commentary+'</div>':''):(t.commentary?'<div class="ttext">'+t.commentary+'</div><div class="tmeta"><span class="tauthor">@'+t.author+'</span><div class="tweet-actions"><button class="tact'+(ip?' pinned-state':'')+'" data-action="pin" title="Pin">&#9733;</button></div></div>':''))+
-        '</'+tag+'>';
+      const ip=isPinned(t),hl=activeA&&t.author.toLowerCase()===activeA;
+      let card='<div class="tweet'+(hl?' highlight':'')+'" data-tidx="'+i+'">';
+      if(t.text){
+        card+=t.url?'<a class="tweet-top" href="'+t.url+'" target="_blank" rel="noopener">':'<div class="tweet-top">';
+        card+='<div class="ttext">'+t.text+'</div><div class="tmeta"><span class="tauthor">@'+t.author+'</span><div class="tweet-actions"><button class="tact'+(ip?' pinned-state':'')+'" data-action="pin" title="Pin">&#9733;</button></div></div>';
+        card+=t.url?'</a>':'</div>';
+      }
+      if(t.commentary){
+        if(t.text)card+='<div class="tsep"></div>';
+        card+='<a class="tweet-bottom" href="'+e.url+'" target="_blank" rel="noopener"><div class="tcomm-tag">shaan:</div><div class="tcomm">'+t.commentary+'</div></a>';
+      }
+      if(!t.text&&!t.commentary&&t.url){
+        card+='<a class="tweet-top" href="'+t.url+'" target="_blank" rel="noopener"><div class="tmeta"><span class="tauthor">@'+t.author+'</span></div></a>';
+      }
+      card+='</div>';
+      return card;
     }).join('')+
     '<a class="efull" href="'+e.url+'" target="_blank" rel="noopener">read full newsletter &#8599;</a>'+
     '</div></div>';
